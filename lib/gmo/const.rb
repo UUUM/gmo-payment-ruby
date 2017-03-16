@@ -1,6 +1,5 @@
 module GMO
   module Const
-    remove_const(:INPUT_PARAMS)
     INPUT_PARAMS = {
       access_id: "AccessID", access_pass: "AccessPass",
       address_1: "Address1", address_2: "Address2",
