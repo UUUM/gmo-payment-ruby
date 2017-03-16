@@ -122,30 +122,10 @@ module GMO
       # {"ACS"=>"0", "OrderID"=>"100", "Forward"=>"2a99662", "Method"=>"1", "PayTimes"=>"", "Approve"=>"6294780", "TranID"=>"1302160543111111111111192829", "TranDate"=>"20130216054346", "CheckString"=>"3e455a2168fefc90dbb7db7ef7b0fe82", "ClientField1"=>"client_field1", "ClientField2"=>"", "ClientField3"=>""}
       def exec_tran(options = {})
         name = "ExecTran.idPass"
-        if options[:client_field_1] || options[:client_field_2] || options[:client_field_3]
-          options[:client_field_flg] = "1"
-        else
-          options[:client_field_flg] = "0"
-        end
+        options[:client_field_flg] = options[:client_field_1] || options[:client_field_2] || options[:client_field_3] ? "1" : "0"
         options[:device_category] = "0"
 
-        # args = {
-        #   "AccessID"        => options[:access_id],
-        #   "AccessPass"      => options[:access_pass],
-        #   "OrderID"         => options[:order_id],
-        #   "Method"          => options[:method],
-        #   "PayTimes"        => options[:pay_times],
-        #   "CardNo"          => options[:card_no],
-        #   "Expire"          => options[:expire],
-        #   "HttpAccept"      => options[:http_accept],
-        #   "HttpUserAgent"   => options[:http_ua],
-        #   "DeviceCategory"  => "0",
-        #   "ClientField1"    => options[:client_field_1],
-        #   "ClientField2"    => options[:client_field_2],
-        #   "ClientField3"    => options[:client_field_3],
-        #   "ClientFieldFlag" => client_field_flg
-        # }
-        required = [:access_id, :access_pass, :order_id, :card_no, :expire]
+        required = [:access_id, :access_pass, :order_id, :token]
         assert_required_options(required, options)
         post_request name, options
       end
@@ -251,6 +231,215 @@ module GMO
         post_request name, options
       end
 
+
+      def cancel_tran_cvs(options = {})
+        name = "CvsCancel.idPass"
+        required = [:order_id, :access_id, :access_pass]
+
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # ソフトバンク都度課金 - 取引登録
+      def entry_tran_sb(options = {})
+        name = "EntryTranSb.idPass"
+        required = [:order_id, :amount]
+
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # ソフトバンク都度課金 - 決済実行
+      def exec_tran_sb(options = {})
+        name = "ExecTranSb.idPass"
+        options[:client_field_flg] = options[:client_field_1] || options[:client_field_2] || options[:client_field_3] ? "1" : "0"
+
+        required = [:access_id, :access_pass, :order_id, :ret_url]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # ソフトバンク継続課金 - 取引登録
+      def entry_tran_sb_con(options = {})
+        name = "EntryTranSbContinuance.idPass"
+        required = [:order_id, :amount]
+
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # ソフトバンク継続課金 - 決済実行
+      def exec_tran_sb_con(options = {})
+        name = "ExecTranSbContinuance.idPass"
+        options[:client_field_flg] = options[:client_field_1] || options[:client_field_2] || options[:client_field_3] ? "1" : "0"
+
+        required = [:access_id, :access_pass, :order_id, :ret_url, :charge_day, :first_month_free_flag]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # ソフトバンク継続課金 - 解約
+      def cancel_continuance_sb(options = {})
+        name = "SbContinuanceCancel.idPass"
+        required = [:access_id, :access_pass, :order_id]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # au都度課金 - 取引登録
+      def entry_tran_au(options = {})
+        name = "EntryTranAu.idPass"
+        required = [:order_id, :amount]
+
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # au都度課金 - 決済実行
+      def exec_tran_au(options = {})
+        name = "ExecTranAu.idPass"
+        options[:client_field_flg] = options[:client_field_1] || options[:client_field_2] || options[:client_field_3] ? "1" : "0"
+
+        required = [
+          :access_id, :access_pass, :order_id,
+          :ret_url, :commodity, :service_name,
+          :service_tel
+        ]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # au継続課金 - 取引登録
+      def entry_tran_au_con(options = {})
+        name = "EntryTranAuContinuance.idPass"
+        required = [:order_id, :amount, :first_amount]
+
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # au継続課金 - 決済実行
+      def exec_tran_au_con(options = {})
+        name = "ExecTranAuContinuance.idPass"
+        options[:client_field_flg] = options[:client_field_1] || options[:client_field_2] || options[:client_field_3] ? "1" : "0"
+
+        required = [
+          :access_id, :access_pass, :order_id, :ret_url,
+          :commodity, :account_timing_kbn, :account_timing, :first_account_date,
+          :service_name, :service_tel
+        ]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # au継続課金 - 解約
+      def cancel_continuance_au(options = {})
+        name = "AuContinuanceCancel.idPass"
+        required = [:access_id, :access_pass, :order_id]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # docomo都度課金 - 取引登録
+      def entry_tran_docomo(options = {})
+        name = "EntryTranDocomo.idPass"
+        required = [:order_id, :amount]
+
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # docomo都度課金 - 決済実行
+      def exec_tran_docomo(options = {})
+        name = "ExecTranDocomo.idPass"
+        options[:client_field_flg] = options[:client_field_1] || options[:client_field_2] || options[:client_field_3] ? "1" : "0"
+
+        required = [:access_id, :access_pass, :order_id, :ret_url]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # docomo継続課金 - 取引登録
+      def entry_tran_docomo_con(options = {})
+        name = "EntryTranDocomoContinuance.idPass"
+        required = [:order_id, :amount]
+
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # docomo継続課金 - 決済実行
+      def exec_tran_docomo_con(options = {})
+        name = "ExecTranDocomoContinuance.idPass"
+        options[:client_field_flg] = options[:client_field_1] || options[:client_field_2] || options[:client_field_3] ? "1" : "0"
+
+        required = [
+          :access_id, :access_pass, :order_id, :ret_url,
+          :first_month_free_flag, :confirm_base_date
+        ]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # docomo継続課金 - 解約
+      def cancel_continuance_docomo(options = {})
+        name = "DocomoContinuanceShopEnd.idPass"
+        required = [:access_id, :access_pass, :order_id, :amount, :last_month_free_flag]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # docomo継続課金 - 金額変更
+      def continuance_amount_change_docomo(options = {})
+        name = "DocomoContinuanceShopChange.idPass"
+        required = [:access_id, :access_pass, :order_id, :amount]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # docomo継続課金 - 減額
+      def continuance_sales_docomo(options = {})
+        name = "DocomoContinuanceSales.idPass"
+        required = [:access_id, :access_pass, :order_id, :amount]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # クレジットカード自動売上を定義(登録)する
+      def register_credit_card_continuance(options = {})
+        name = "RegisterRecurringCredit.idPass"
+        required = [
+          :recurring_id, :amount, :charge_day,
+          :charge_start_date, :regist_type
+        ]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # クレジットカード自動売上を解除(解約)する
+      def unregister_credit_card_continuance(options = {})
+        name = "UnregisterRecurring.idPass"
+        required = [:recurring_id]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # クレジットカード自動売上定義を参照する
+      def search_credit_card_continuance(options = {})
+        name = "SearchRecurring.idPass"
+        required = [:recurring_id]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
+      # クレジットカード自動売上の処理結果を参照する
+      def search_result_credit_card_continuance(options = {})
+        name = "SearchRecurringResult.idPass"
+        required = [:recurring_id]
+        assert_required_options(required, options)
+        post_request name, options
+      end
+
       private
 
         def api_call(name, args = {}, verb = "post", options = {})
@@ -261,8 +450,28 @@ module GMO
             end
           end
         end
-
     end
 
+    class APIError < Error
+      def error_codes
+        self.error_info["ErrCode"].split("|")
+      end
+
+      def error_infos
+        self.error_info["ErrInfo"].split("|")
+      end
+
+      def has_error_code?(code)
+        error_codes.include?(code)
+      end
+
+      def has_error_info?(info)
+        error_infos.include?(info)
+      end
+
+      def has_order_id_exists_error?
+        has_error_info?("M01004010")
+      end
+    end
   end
 end
