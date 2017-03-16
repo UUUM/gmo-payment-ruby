@@ -53,6 +53,6 @@ module GMO
       account_timing_kbn: "AccountTimingKbn", account_timing: "AccountTiming",
       first_account_date: "FirstAccountDate", first_amount: "FirstAmount",
       tel_no: "TelNo"
-    }.freeze
+    }
   end
 end
