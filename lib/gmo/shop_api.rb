@@ -410,7 +410,7 @@ module GMO
         name = "RegisterRecurringCredit.idPass"
         required = [
           :recurring_id, :amount, :charge_day,
-          :charge_start_date, :regist_type
+          :regist_type
         ]
         assert_required_options(required, options)
         post_request name, options
